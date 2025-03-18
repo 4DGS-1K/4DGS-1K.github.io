@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <!-- <meta name="description" -->
+        <!-- content="Deformable Neural Radiance Fields creates free-viewpoint portraits (nerfies) from casually captured videos."> -->
+  <!-- <meta name="keywords" content="Nerfies, D-NeRF, NeRF"> -->
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+  <title>1000+ FPS 4D Gaussian Splatting for Dynamic Scene Rendering</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/styles.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <!-- <link rel="icon" href="./static/images/favicon.svg"> -->
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+  <script
+  defer
+  src="https://cdn.jsdelivr.net/npm/img-comparison-slider@8/dist/index.js"
+></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/img-comparison-slider@8/dist/styles.css"
+/>
+</head>
+<body>
+
+<!-- <nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://keunhong.com">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://hypernerf.github.io">
+            HyperNeRF
+          </a>
+          <a class="navbar-item" href="https://nerfies.github.io">
+            Nerfies
+          </a>
+          <a class="navbar-item" href="https://latentfusion.github.io">
+            LatentFusion
+          </a>
+          <a class="navbar-item" href="https://photoshape.github.io">
+            PhotoShape
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav> -->
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">1000+ FPS 4D Gaussian Splatting for Dynamic Scene Rendering</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?user=_NkbonQAAAAJ">Yuheng Yuan</a>,</span>
+            <span class="author-block">
+              <a href="https://florinshen.github.io/">Qiuhong Shen</a>,</span>
+            <span class="author-block">
+              <a href="https://adamdad.github.io/">Xingyi Yang</a>,
+            </span>
+            <span class="author-block">
+              <a href="https://sites.google.com/site/sitexinchaowang/">Xinchao Wang</a>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">National University of Singapore</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/pdf/2011.12948"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2011.12948"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Video Link. -->
+              <!-- <span class="link-block">
+                <a href="https://www.youtube.com/watch?v=MrKrnHhk8IA"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span> -->
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/google/nerfies"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              <!-- Dataset Link. -->
+              <!-- <span class="link-block">
+                <a href="https://github.com/google/nerfies/releases/tag/0.1"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Data</span>
+                  </a> -->
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <video id="teaser" autoplay muted loop playsinline height="100%">
+        <source src="./static/videos/teaser.mp4"
+                type="video/mp4">
+      </video>      
+      <!-- <h2 class="subtitle has-text-centered">
+        <span class="dnerf">4DGS-1K</span> achieves rasterization at 1000+ FPS while maintaining comparable photorealistic quality.
+      </h2> -->
+    </div>
+  </div>
+</section>
+
+<!-- 
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item item-steve">
+          <video poster="" id="steve" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/steve.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-chair-tp">
+          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/chair-tp.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-shiba">
+          <video poster="" id="shiba" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/shiba.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-fullbody">
+          <video poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/fullbody.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-blueshirt">
+          <video poster="" id="blueshirt" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/blueshirt.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-mask">
+          <video poster="" id="mask" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/mask.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-coffee">
+          <video poster="" id="coffee" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/coffee.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-toby">
+          <video poster="" id="toby" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/toby2.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            4D Gaussian Splatting (4DGS) has recently gained considerable attention as a method for reconstructing dynamic scenes. 
+            Despite achieving superior quality, 4DGS typically requires substantial storage and suffers from slow rendering speed. 
+            In this work, we delve into these issues and identify two key sources of temporal redundancy. 
+          </p>
+          
+          <p>
+            (Q1) <b>Short-Lifespan Gaussians: </b> 4DGS uses a large portion of Gaussians with short temporal span to represent scene dynamics, leading to an excessive number of Gaussians. 
+          </p>
+          <p> 
+            (Q2) <b>Inactive Gaussians: </b> When rendering, only a small subset of Gaussians contributes to each frame. 
+            Despite this, all Gaussians are processed during rasterization, resulting in redundant computation overhead.
+          </p>
+          
+          <p>
+            To address these redundancies, we present <b>4DGS-1K</b>, which runs at over 1000 FPS on modern GPUs. 
+          
+          </p>
+
+          <p>
+            For Q1, we introduce the Spatial-Temporal Variation Score, 
+            a new pruning criterion that effectively removes short-lifespan Gaussians 
+            while encouraging 4DGS to capture scene dynamics using Gaussians with longer temporal spans.
+          </p>
+          <p>
+            For Q2, we store a mask for active Gaussians across consecutive frames, significantly reducing redundant computations in rendering. 
+          </p>
+          <p>
+            Compared to vanilla 4DGS, our method achieves a <b>41⨯</b> reduction in storage and <b>9⨯</b> faster rasterization speed on complex dynamic scenes, 
+            while maintaining comparable visual quality.
+
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Teaser. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="container is-max-desktop">
+        <div class="content has-text-justified">
+          <div class="columns is-centered">
+            <img src="./static/images/teaser.svg" width="100%" class="interpolation-image" alt="Interpolation end reference image.">
+          </div>
+          <p> 
+            In contrast to 4D Gaussian Splatting (4DGS), 
+            our method achieves rasterization at 1000+ FPS while maintaining comparable photorealistic quality 
+            with only 2% of the original storage size. The right figure is the result tested 
+            on the N3V datasets, where the radius of the dot corresponds to the storage size.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Teaser. -->
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">Qualitative Comparisons</h2>
+    <p>
+      We report the rendering speed in FPS on a RTX 3090 GPU.
+    </p>
+    
+    <h2 class="title is-4">N3V Dataset</h2>
+
+    <div class="columns is-centered">
+
+      <!-- Visual Effects. -->
+      <div class="column">
+        <div class="content">
+          <video autoplay="" controls="" muted="" loop="" playsinline="" height="100%">
+            <source src="./static/videos/cut_roasted_beef.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+      <!--/ Visual Effects. -->
+
+      <!-- Matting. -->
+      <div class="column">
+        <div class="columns is-centered">
+          <div class="column content">
+            <video autoplay="" controls="" muted="" loop="" playsinline="" height="100%">
+              <source src="./static/videos/coffee_martini.mp4" type="video/mp4">
+            </video>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="columns is-centered">
+          <div class="column content">
+            <video autoplay="" controls="" muted="" loop="" playsinline="" height="100%">
+              <source src="./static/videos/sear_steak.mp4" type="video/mp4">
+            </video>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <h2 class="title is-4">D-NeRF Dataset</h2>
+
+    <div class="columns is-centered">
+
+      <!-- Visual Effects. -->
+      <div class="column">
+        <div class="content">
+
+          <video autoplay="" controls="" muted="" loop="" playsinline="" height="100%">
+            <source src="./static/videos/bouncingballs.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="content">
+          <video autoplay="" controls="" muted="" loop="" playsinline="" height="100%">
+            <source src="./static/videos/standup.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="content">
+          <video autoplay="" controls="" muted="" loop="" playsinline="" height="100%">
+            <source src="./static/videos/mutant.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="content">
+          <video autoplay="" controls="" muted="" loop="" playsinline="" height="100%">
+            <source src="./static/videos/hook.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+      <!--/ Visual Effects. -->
+
+      <!-- Matting. -->
+      <!-- <div class="column">
+        <div class="columns is-centered">
+          <div class="column content">
+            <video autoplay="" controls="" muted="" loop="" playsinline="" height="100%">
+              <source src="./static/videos/mutant.mp4" type="video/mp4">
+            </video>
+          </div>
+
+        </div>
+      </div> -->
+
+      <!-- <div class="column">
+        <div class="columns is-centered">
+          <div class="column content">
+            <video autoplay="" controls="" muted="" loop="" playsinline="" height="100%">
+              <source src="./static/videos/mutant.mp4" type="video/mp4">
+            </video>
+          </div>
+
+        </div>
+      </div> -->
+    </div>
+    <!-- Re-rendering. -->
+    <!-- <h3 class="title is-4">N3V Dataset</h3>
+    <div class="content has-text-justified">
+      <p>
+        Using <span class="dnerf">Nerfies</span>, you can re-render a video from a novel
+        viewpoint such as a stabilized camera by playing back the training deformations.
+      </p>
+    </div> -->
+
+    
+    <!-- <div class="content has-text-centered">
+      <video id="replay-video"
+             controls
+             muted
+             preload
+             playsinline
+             width="75%">
+        <source src="./static/videos/replay.mp4"
+                type="video/mp4">
+      </video>
+    </div> -->
+    <!--/ Re-rendering. -->
+
+
+
+    <h2 class="title is-4">Floaters and Artifacts Removed</h2>
+    <!-- <p>
+      Vanilla 4DGS suffers from floaters and artifacts, due to the limited training viewpoints on the D-NeRF Datasets.
+      These three scenes exhibit floaters and artifacts issues due to limited training viewpoints.  
+      However, 4DGS-1K successfully mitigates the occurrence of this phenomenon through pruning and filtering.
+    </p> -->
+    <div class="columns is-centered">
+      
+      <div class="column ">
+        
+        <div class="content ">
+        
+          <img-comparison-slider style="width: 100%;" hover="hover" tabindex="0" class="rendered"><template shadowrootmode="open"><style>:host{--divider-width: 1px;--divider-color: #fff;--divider-shadow: none;--default-handle-width: 50px;--default-handle-color: #fff;--default-handle-opacity: 1;--default-handle-shadow: none;--handle-position-start: 50%;position:relative;display:inline-block;overflow:hidden;line-height:0;direction:ltr}@media screen and (-webkit-min-device-pixel-ratio: 0)and (min-resolution: 0.001dpcm){:host{outline-offset:1px}}:host(:focus){outline:2px solid -webkit-focus-ring-color}::slotted(*){-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;-o-user-drag:none;user-drag:none;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.first{position:absolute;left:0;top:0;right:0;line-height:normal;font-size:100%;max-height:100%;height:100%;width:100%;--exposure: 50%;--keyboard-transition-time: 0ms;--default-transition-time: 0ms;--transition-time: var(--default-transition-time)}.first .first-overlay-container{position:relative;clip-path:inset(0 var(--exposure) 0 0);transition:clip-path var(--transition-time);height:100%}.first .first-overlay{overflow:hidden;height:100%}.first.focused{will-change:clip-path}.first.focused .first-overlay-container{will-change:clip-path}.second{position:relative}.handle-container{transform:translateX(50%);position:absolute;top:0;right:var(--exposure);height:100%;transition:right var(--transition-time),bottom var(--transition-time)}.focused .handle-container{will-change:right}.divider{position:absolute;height:100%;width:100%;left:0;top:0;display:flex;align-items:center;justify-content:center;flex-direction:column}.divider:after{content:" ";display:block;height:100%;border-left-width:var(--divider-width);border-left-style:solid;border-left-color:var(--divider-color);box-shadow:var(--divider-shadow)}.handle{position:absolute;top:var(--handle-position-start);pointer-events:none;box-sizing:border-box;margin-left:1px;transform:translate(calc(-50% - 0.5px), -50%);line-height:0}.default-handle{width:var(--default-handle-width);opacity:var(--default-handle-opacity);transition:all 1s;filter:drop-shadow(var(--default-handle-shadow))}.default-handle path{stroke:var(--default-handle-color)}.vertical .first-overlay-container{clip-path:inset(0 0 var(--exposure) 0)}.vertical .handle-container{transform:translateY(50%);height:auto;top:unset;bottom:var(--exposure);width:100%;left:0;flex-direction:row}.vertical .divider:after{height:1px;width:100%;border-top-width:var(--divider-width);border-top-style:solid;border-top-color:var(--divider-color);border-left:0}.vertical .handle{top:auto;left:var(--handle-position-start);transform:translate(calc(-50% - 0.5px), -50%) rotate(90deg)}</style><div class="second" id="second"> <slot name="second"><slot name="before"></slot></slot> </div> <div class="first horizontal" id="first" style="--exposure: 57.93650793650794%;"> <div class="first-overlay"> <div class="first-overlay-container" id="firstImageContainer"> <slot name="first"><slot name="after"></slot></slot> </div> </div> <div class="handle-container"> <div class="divider"></div> <div class="handle" id="handle"> <slot name="handle"> <svg xmlns="http://www.w3.org/2000/svg" class="default-handle" viewBox="-8 -3 16 6"> <path d="M -5 -2 L -7 0 L -5 2 M 5 -2 L 7 0 L 5 2" fill="none" vector-effect="non-scaling-stroke"></path> </svg> </slot> </div> </div> </div> </template>
+          <span slot="first" class="img-container">
+            <img src="./static/images/bouncingballs_4dgs.png" width="100%">
+            <!-- <span class="bottom-left">3DGS</span> -->
+          </span>
+          <span slot="second" class="img-container">
+            <img src="./static/images/bouncingballs_ours.png" width="100%">
+            <!-- <span class="bottom-right">Ours</span> -->
+          </span>
+          </img-comparison-slider>
+
+        </div>
+      </div>
+      <div class="column">
+        <div class="columns is-centered">
+          <div class="column content">
+            <img-comparison-slider style="width: 100%;" hover="hover" tabindex="0" class="rendered"><template shadowrootmode="open"><style>:host{--divider-width: 1px;--divider-color: #fff;--divider-shadow: none;--default-handle-width: 50px;--default-handle-color: #fff;--default-handle-opacity: 1;--default-handle-shadow: none;--handle-position-start: 50%;position:relative;display:inline-block;overflow:hidden;line-height:0;direction:ltr}@media screen and (-webkit-min-device-pixel-ratio: 0)and (min-resolution: 0.001dpcm){:host{outline-offset:1px}}:host(:focus){outline:2px solid -webkit-focus-ring-color}::slotted(*){-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;-o-user-drag:none;user-drag:none;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.first{position:absolute;left:0;top:0;right:0;line-height:normal;font-size:100%;max-height:100%;height:100%;width:100%;--exposure: 50%;--keyboard-transition-time: 0ms;--default-transition-time: 0ms;--transition-time: var(--default-transition-time)}.first .first-overlay-container{position:relative;clip-path:inset(0 var(--exposure) 0 0);transition:clip-path var(--transition-time);height:100%}.first .first-overlay{overflow:hidden;height:100%}.first.focused{will-change:clip-path}.first.focused .first-overlay-container{will-change:clip-path}.second{position:relative}.handle-container{transform:translateX(50%);position:absolute;top:0;right:var(--exposure);height:100%;transition:right var(--transition-time),bottom var(--transition-time)}.focused .handle-container{will-change:right}.divider{position:absolute;height:100%;width:100%;left:0;top:0;display:flex;align-items:center;justify-content:center;flex-direction:column}.divider:after{content:" ";display:block;height:100%;border-left-width:var(--divider-width);border-left-style:solid;border-left-color:var(--divider-color);box-shadow:var(--divider-shadow)}.handle{position:absolute;top:var(--handle-position-start);pointer-events:none;box-sizing:border-box;margin-left:1px;transform:translate(calc(-50% - 0.5px), -50%);line-height:0}.default-handle{width:var(--default-handle-width);opacity:var(--default-handle-opacity);transition:all 1s;filter:drop-shadow(var(--default-handle-shadow))}.default-handle path{stroke:var(--default-handle-color)}.vertical .first-overlay-container{clip-path:inset(0 0 var(--exposure) 0)}.vertical .handle-container{transform:translateY(50%);height:auto;top:unset;bottom:var(--exposure);width:100%;left:0;flex-direction:row}.vertical .divider:after{height:1px;width:100%;border-top-width:var(--divider-width);border-top-style:solid;border-top-color:var(--divider-color);border-left:0}.vertical .handle{top:auto;left:var(--handle-position-start);transform:translate(calc(-50% - 0.5px), -50%) rotate(90deg)}</style><div class="second" id="second"> <slot name="second"><slot name="before"></slot></slot> </div> <div class="first horizontal" id="first" style="--exposure: 50%;"> <div class="first-overlay"> <div class="first-overlay-container" id="firstImageContainer"> <slot name="first"><slot name="after"></slot></slot> </div> </div> <div class="handle-container"> <div class="divider"></div> <div class="handle" id="handle"> <slot name="handle"> <svg xmlns="http://www.w3.org/2000/svg" class="default-handle" viewBox="-8 -3 16 6"> <path d="M -5 -2 L -7 0 L -5 2 M 5 -2 L 7 0 L 5 2" fill="none" vector-effect="non-scaling-stroke"></path> </svg> </slot> </div> </div> </div> </template>
+            <span slot="first" class="img-container">
+              <img src="./static/images/standup_4dgs.png" width="100%">
+              <!-- <span class="bottom-left">ZipNeRF</span> -->
+            </span>
+            <span slot="second" class="img-container">
+              <img src="./static/images/standup_ours.png" width="100%">
+              <!-- <span class="bottom-right">Ours</span> -->
+            </span>
+            </img-comparison-slider>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="columns is-centered">
+          <div class="column content">
+            <img-comparison-slider style="width: 100%;" hover="hover" tabindex="0" class="rendered"><template shadowrootmode="open"><style>:host{--divider-width: 1px;--divider-color: #fff;--divider-shadow: none;--default-handle-width: 50px;--default-handle-color: #fff;--default-handle-opacity: 1;--default-handle-shadow: none;--handle-position-start: 50%;position:relative;display:inline-block;overflow:hidden;line-height:0;direction:ltr}@media screen and (-webkit-min-device-pixel-ratio: 0)and (min-resolution: 0.001dpcm){:host{outline-offset:1px}}:host(:focus){outline:2px solid -webkit-focus-ring-color}::slotted(*){-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;-o-user-drag:none;user-drag:none;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.first{position:absolute;left:0;top:0;right:0;line-height:normal;font-size:100%;max-height:100%;height:100%;width:100%;--exposure: 50%;--keyboard-transition-time: 0ms;--default-transition-time: 0ms;--transition-time: var(--default-transition-time)}.first .first-overlay-container{position:relative;clip-path:inset(0 var(--exposure) 0 0);transition:clip-path var(--transition-time);height:100%}.first .first-overlay{overflow:hidden;height:100%}.first.focused{will-change:clip-path}.first.focused .first-overlay-container{will-change:clip-path}.second{position:relative}.handle-container{transform:translateX(50%);position:absolute;top:0;right:var(--exposure);height:100%;transition:right var(--transition-time),bottom var(--transition-time)}.focused .handle-container{will-change:right}.divider{position:absolute;height:100%;width:100%;left:0;top:0;display:flex;align-items:center;justify-content:center;flex-direction:column}.divider:after{content:" ";display:block;height:100%;border-left-width:var(--divider-width);border-left-style:solid;border-left-color:var(--divider-color);box-shadow:var(--divider-shadow)}.handle{position:absolute;top:var(--handle-position-start);pointer-events:none;box-sizing:border-box;margin-left:1px;transform:translate(calc(-50% - 0.5px), -50%);line-height:0}.default-handle{width:var(--default-handle-width);opacity:var(--default-handle-opacity);transition:all 1s;filter:drop-shadow(var(--default-handle-shadow))}.default-handle path{stroke:var(--default-handle-color)}.vertical .first-overlay-container{clip-path:inset(0 0 var(--exposure) 0)}.vertical .handle-container{transform:translateY(50%);height:auto;top:unset;bottom:var(--exposure);width:100%;left:0;flex-direction:row}.vertical .divider:after{height:1px;width:100%;border-top-width:var(--divider-width);border-top-style:solid;border-top-color:var(--divider-color);border-left:0}.vertical .handle{top:auto;left:var(--handle-position-start);transform:translate(calc(-50% - 0.5px), -50%) rotate(90deg)}</style><div class="second" id="second"> <slot name="second"><slot name="before"></slot></slot> </div> <div class="first horizontal" id="first" style="--exposure: 50%;"> <div class="first-overlay"> <div class="first-overlay-container" id="firstImageContainer"> <slot name="first"><slot name="after"></slot></slot> </div> </div> <div class="handle-container"> <div class="divider"></div> <div class="handle" id="handle"> <slot name="handle"> <svg xmlns="http://www.w3.org/2000/svg" class="default-handle" viewBox="-8 -3 16 6"> <path d="M -5 -2 L -7 0 L -5 2 M 5 -2 L 7 0 L 5 2" fill="none" vector-effect="non-scaling-stroke"></path> </svg> </slot> </div> </div> </div> </template>
+            <span slot="first" class="img-container">
+              <img src="./static/images/hook_4dgs.png" width="100%">
+              <!-- <span class="bottom-left">ZipNeRF</span> -->
+            </span>
+            <span slot="second" class="img-container">
+              <img src="./static/images/hook_ours.png" width="100%">
+              <!-- <span class="bottom-right">Ours</span> -->
+            </span>
+            </img-comparison-slider>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">Quantitative Comparisons</h2>
+    <h2 class="title is-4">N3V Dataset</h2>
+      <div class="content has-text-justified">
+        <div class="columns is-centered">
+          <img src="./static/images/N3V.svg" width="100%" class="interpolation-image" alt="Interpolation end reference image.">
+        </div>
+      </div>
+    <h2 class="title is-4">D-NeRF Dataset</h2>
+      <div class="content has-text-justified">
+        <div class="columns is-centered">
+          <img src="./static/images/dnerf.svg" width="100%" class="interpolation-image" alt="Interpolation end reference image.">
+        </div>
+      </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+
+    <!-- Animation. -->
+    <!-- <div class="columns is-centered"> -->
+      <!-- <div class="column is-full-width"> -->
+        <!-- <h2 class="title is-3">Visual Comparisons</h2> -->
+        <!-- Re-rendering. -->
+        <!-- <h3 class="title is-4">Re-rendering the input video</h3>
+        <div class="content has-text-justified">
+          <p>
+            Using <span class="dnerf">Nerfies</span>, you can re-render a video from a novel
+            viewpoint such as a stabilized camera by playing back the training deformations.
+          </p>
+        </div>
+        <div class="content has-text-centered">
+          <video id="replay-video"
+                 controls
+                 muted
+                 preload
+                 playsinline
+                 width="75%">
+            <source src="./static/videos/replay.mp4"
+                    type="video/mp4">
+          </video>
+        </div> -->
+        <!--/ Re-rendering. -->
+
+      <!-- </div> -->
+    <!-- </div> -->
+    <!--/ Animation. -->
+
+
+    <!-- Concurrent Work. -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Related Links</h2>
+
+        <div class="content has-text-justified">
+          <p>
+            Welcome to also check out these awesome concurrent/related works, including but not limited to:
+          </p>
+          <p>
+
+          <ul>
+            <li> 3D/4D Gaussian Compression: <a href="https://arxiv.org/abs/2403.14166">Mini-Splatting</a>, 
+                                          <a href="https://arxiv.org/abs/2311.17245">LightGaussian</a>, 
+                                          <a href="https://arxiv.org/abs/2403.13806">RadSplat</a>, 
+                                          <a href="https://arxiv.org/abs/2410.13613">MEGA</a>, 
+                                          <a href="https://arxiv.org/abs/2408.03822">c3dgs</a>.
+            </li>
+
+            <li>Novel view synthesis: <a href="https://arxiv.org/abs/2310.10642">4DGS</a>, 
+              <a href="https://arxiv.org/abs/2310.08528">4D Gaussians</a>, 
+              <a href="https://arxiv.org/abs/2312.16812">STG</a>.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!--/ Concurrent Work. -->
+
+  </div>
+</section>
+
+
+
+
+
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{park2021nerfies,
+  author    = {Park, Keunhong and Sinha, Utkarsh and Barron, Jonathan T. and Bouaziz, Sofien and Goldman, Dan B and Seitz, Steven M. and Martin-Brualla, Ricardo},
+  title     = {Nerfies: Deformable Neural Radiance Fields},
+  journal   = {ICCV},
+  year      = {2021},
+}</code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link"
+         href="./static/videos/nerfies_paper.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            This means you are free to borrow the <a
+              href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website,
+            we just ask that you link back to this page in the footer.
+            Please remember to remove the analytics code included in the header of the website which
+            you do not want on your website.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
